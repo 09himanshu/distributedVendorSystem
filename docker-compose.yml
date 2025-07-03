@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: orders_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d orders_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vendor
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: adminpassword
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
+    networks:
+      - vendor
+  
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672" # Web UI
+
+  mock_vendor:
+    build: ./mock_vendor
+    ports:
+      - "5001:5001"
+    networks:
+      - vendor
+    
+
+  vendor-sync:
+    build: ./vendor-sync
+    environment:
+      DATABASE_URL: postgres://postgres:password@postgres:5432/orders_db
+    depends_on:
+      - postgres
+    networks:
+      - vendor
+
+
+  # order-api:
+  #   build: ./order-api
+  #   depends_on:
+  #     - postgres
+  #     - rabbitmq
+  #   environment:
+  #     DATABASE_URL: postgres://postgres:password@postgres:5432/orders_db
+  #     RABBITMQ_URL: amqp://rabbitmq
+
+  # order-worker:
+  #   build: ./order-worker
+  #   depends_on:
+  #     - postgres
+  #     - rabbitmq
+  #   environment:
+  #     DATABASE_URL: postgres://postgres:password@postgres:5432/orders_db
+  #     RABBITMQ_URL: amqp://rabbitmq
+
+volumes:
+  pgdata:
+
+networks:
+  vendor:
+    driver: bridge

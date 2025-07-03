@@ -1,0 +1,10 @@
+[
+  {
+    "name": "vendorA",
+    "url": "http://0.0.0.0:5001/api/v1/vendor/AStock"
+  },
+  {
+    "name": "vendorB",
+    "url": "http://0.0.0.0:5001/api/v1/vendor/BStock"
+  }
+]
