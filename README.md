@@ -69,8 +69,8 @@ docker ps
 
 ## Sync Vendor Stock
 Stock is synced every 10 seconds from:
-- GET http://mock_vendor:5001/api/v1/vendor/AStock | http://0.0.0.0:5001/api/v1/vendor/AStock
-- GET http://mock_vendor:5001/api/v1/vendor/BStock | http://0.0.0.0:5001/api/v1/vendor/BStock
+- GET http://mock_vendor:5001/api/v1/vendor/AStock (for container communication) | http://0.0.0.0:5001/api/v1/vendor/AStock
+- GET http://mock_vendor:5001/api/v1/vendor/BStock (for container communication) | http://0.0.0.0:5001/api/v1/vendor/BStock
 
 Data is inserted or incremented in the `stock` table.
 
