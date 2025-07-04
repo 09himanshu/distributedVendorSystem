@@ -53,7 +53,7 @@ This is a Node.js-based Distributed Order Aggregator System that:
 - Docker Compose
 
 ### Run the system
-```bash
+```
 docker compose up --build -d
 docker ps
 ```
@@ -105,5 +105,10 @@ The worker:
 | Monitor queue              | Visit RabbitMQ UI at [http://localhost:15672](http://localhost:15672) |
 | DB GUI PgAdmin             | http://localhost:80                                                   |
 
+
+## Check logs
+```
+docker logs -f <container logs> // this will give the live server logs
+```
 ## Author
 Himanshu Sah
