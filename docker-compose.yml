@@ -34,45 +34,83 @@ services:
   
   rabbitmq:
     image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin@123
     ports:
       - "5672:5672"
-      - "15672:15672" # Web UI
+      - "15672:15672"
+    networks:
+      - vendor
 
   mock_vendor:
     build: ./mock_vendor
+    environment:
+      serverPort: 5001
+      serverHost: 0.0.0.0
     ports:
       - "5001:5001"
     networks:
       - vendor
     
-
   vendor-sync:
     build: ./vendor-sync
-    environment:
-      DATABASE_URL: postgres://postgres:password@postgres:5432/orders_db
     depends_on:
       - postgres
+      - mock_vendor
+    environment:
+      DB_URL: postgres://postgres:password@postgres:5432/orders_db
+      dialect: postgres
+      logging: true
+      connectTimeout: 10000
+      poolMax: 5
+      poolMin: 0
+      poolAcquire: 30000
+      poolIdle: 10000
     networks:
       - vendor
 
+  order-api:
+    build: ./order-api
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      DB_URL: postgres://postgres:password@postgres:5432/orders_db
+      RABBITMQ_URL: amqp://admin:admin@123@rabbitmq:5672
+      queueName: orderQueue
+      dialect: postgres
+      logging: true
+      connectTimeout: 10000
+      poolMax: 5
+      poolMin: 0
+      poolAcquire: 30000
+      poolIdle: 10000
+      serverPort: 5002
+      serverHost: 0.0.0.0
+    ports:
+      - "5002:5002"
+    networks:
+      - vendor
 
-  # order-api:
-  #   build: ./order-api
-  #   depends_on:
-  #     - postgres
-  #     - rabbitmq
-  #   environment:
-  #     DATABASE_URL: postgres://postgres:password@postgres:5432/orders_db
-  #     RABBITMQ_URL: amqp://rabbitmq
-
-  # order-worker:
-  #   build: ./order-worker
-  #   depends_on:
-  #     - postgres
-  #     - rabbitmq
-  #   environment:
-  #     DATABASE_URL: postgres://postgres:password@postgres:5432/orders_db
-  #     RABBITMQ_URL: amqp://rabbitmq
+  order-worker:
+    build: ./order-worker
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      DB_URL: postgres://postgres:password@postgres:5432/orders_db
+      RABBITMQ_URL: amqp://admin:admin@123@rabbitmq:5672
+      queueName: orderQueue
+      dialect: postgres
+      logging: true
+      connectTimeout: 10000
+      poolMax: 5
+      poolMin: 0
+      poolAcquire: 30000
+      poolIdle: 10000
+    networks:
+      - vendor
 
 volumes:
   pgdata:

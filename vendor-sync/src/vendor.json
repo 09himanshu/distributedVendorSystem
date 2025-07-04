@@ -1,10 +1,12 @@
 [
   {
     "name": "vendorA",
-    "url": "http://0.0.0.0:5001/api/v1/vendor/AStock"
+    "url": "http://0.0.0.0:5001/api/v1/vendor/AStock",
+    "containerUrl": "http://mock_vendor:5001/api/v1/vendor/AStock"
   },
   {
     "name": "vendorB",
-    "url": "http://0.0.0.0:5001/api/v1/vendor/BStock"
+    "url": "http://0.0.0.0:5001/api/v1/vendor/BStock",
+    "containerUrl": "http://mock_vendor:5001/api/v1/vendor/BStock"
   }
 ]

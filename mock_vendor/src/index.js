@@ -1,7 +1,7 @@
 import express from 'express'
 import {config} from 'dotenv'
 
-config()
+// config()
 
 import indexRoutes from './routes/index.routes.js'
 import {errorMiddleware} from './middleware/error.middleware.js'

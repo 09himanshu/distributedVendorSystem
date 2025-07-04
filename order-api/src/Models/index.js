@@ -1,5 +1,9 @@
-import {Sequelize} from 'sequelize'
-import Stock from './stock.model.js'
+import { Sequelize } from 'sequelize';
+import stock from './stock.models.js'
+import order from './order.models.js'
+
+
+// config()
 
 const sequelize = new Sequelize(process.env.DB_URL, {
   dialect: process.env.dialect,
@@ -16,11 +20,8 @@ const sequelize = new Sequelize(process.env.DB_URL, {
 });
 
 const db = {};
-
 db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+db.Stock = stock(sequelize);
+db.Order = order(sequelize);
 
-db.stock = Stock(sequelize)
-
-
-export default db
+export default db;

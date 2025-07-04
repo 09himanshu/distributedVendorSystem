@@ -1,2 +1,4 @@
 mock_vendor/node_modules/*
 vendor-sync/node_modules/*
+order-api/node_modules/*
+order-worker/node_modules/*
