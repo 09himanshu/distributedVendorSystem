@@ -1,9 +1,12 @@
 import express from 'express';
-// import dotenv from 'dotenv';
+import axios from 'axios';
 import db from './Models/index.js';
 import {errorMiddleware} from './middleware/error.middleware.js'
 import indexRoutes from './routes/index.routes.js'
-// dotenv.config();
+
+const API_URL = 'http://0.0.0.0:5002/api/v1/order/place';
+
+const productIds = ['A001', 'A002', 'A003', 'A004', 'A005', 'A006', 'A007', 'A008', 'A009', 'A010', 'B101', 'B102', 'B103', 'B104', 'B105', 'B106', 'B107', 'B108', 'B109', 'B110']
 
 const app = express();
 app.use(express.json());
@@ -27,6 +30,19 @@ async function DbConnection() {
 }
 
 await DbConnection()
+
+
+setInterval(async () => {
+  const product_id = productIds[Math.floor(Math.random() * productIds.length)];
+  const quantity = Math.floor(Math.random() * 3) + 1;
+
+  try {
+    const { data } = await axios.post(API_URL, { product_id, quantity });
+    console.log(`Order placed for ${product_id} x${quantity}`);
+  } catch (err) {
+    console.error(`Failed:`, err.response?.data?.message || err.message);
+  }
+}, 3000);
 
 // Start server
 app.listen(serverPort, serverHost, () => {

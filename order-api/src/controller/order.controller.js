@@ -18,7 +18,7 @@ export const order = async (req, res, next) => {
       });
 
       if (!stock || stock.quantity < quantity) {
-        throw new Error.BadRequestError('Insufficient stock');
+        return next(new Error.BadRequestError('Insufficient stock'))
       }
 
       // Decrement stock - try this approach

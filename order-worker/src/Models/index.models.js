@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import order from './order.js';
+import order from './order.models.js';
 
 const sequelize = new Sequelize(process.env.DB_URL, {
   dialect: process.env.dialect,

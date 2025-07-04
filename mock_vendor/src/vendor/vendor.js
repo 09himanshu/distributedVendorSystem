@@ -24,7 +24,6 @@ const vendorAStock = async (req, res, next) => {
   }
 }
 
-
 const vendorBStock = async (req, res, next) => {
   try {
     let data = [

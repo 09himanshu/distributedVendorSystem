@@ -28,7 +28,7 @@ const startSyncLoop = async () => {
     await syncAllVendors();
 
     // Run every 30 seconds
-    setInterval(syncAllVendors, 30000);
+    setInterval(syncAllVendors, 10000);
   } catch (err) {
     console.error('Sync loop crashed:', err);
   }

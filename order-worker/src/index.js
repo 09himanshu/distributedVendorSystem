@@ -1,28 +1,39 @@
 // import dotenv from 'dotenv';
-import db from './Models/index.models.js';
-import { startWorker } from './queue/consumer.js';
+import db from "./Models/index.models.js";
+import { startWorker } from "./queue/consumer.queue.js";
 
 // dotenv.config();
 
 async function DbConnection() {
   try {
     await db.sequelize.authenticate();
-    await db.sequelize.sync({alter: true});
-    console.log('Database connection has been established successfully.');
+    await db.sequelize.sync({ alter: true });
+    console.log("Database connection has been established successfully.");
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error("Unable to connect to the database:", error);
     process.exit(1);
   }
 }
 
-await DbConnection()
+await DbConnection();
 
-const init = async () => {
+const startSyncLoop = async () => {
   try {
-    await startWorker();
+    const init = async () => {
+      try {
+        await startWorker();
+      } catch (err) {
+        console.error("Worker startup failed:", err.message);
+      }
+    };
+
+    await init();
+
+    // Run every 10 seconds
+    setInterval(init, 10000);
   } catch (err) {
-    console.error('Worker startup failed:', err.message);
+    console.error("Sync loop crashed:", err);
   }
 };
 
-init();
+startSyncLoop();

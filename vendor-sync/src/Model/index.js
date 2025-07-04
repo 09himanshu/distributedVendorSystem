@@ -22,5 +22,4 @@ db.Sequelize = Sequelize;
 
 db.stock = Stock(sequelize)
 
-
 export default db

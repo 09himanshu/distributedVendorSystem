@@ -14,7 +14,8 @@ export const startWorker = async () => {
 
     try {
       const order = await db.Order.findByPk(content.id);
-      if (!order) throw new Error('Order not found');
+      if (!order) return 'Order not found'
+        // throw new Error('Order not found');
 
       // Simulate vendor success
       const success = Math.random() > 0.2;
@@ -29,7 +30,6 @@ export const startWorker = async () => {
 
     } catch (err) {
       console.error(`Order processing failed:`, err.message);
-
       channel.nack(msg, false, true);
     }
   });
