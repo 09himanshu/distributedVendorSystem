@@ -21,7 +21,7 @@ app.use(errorMiddleware)
 async function DbConnection() {
   try {
     await db.sequelize.authenticate();
-    await db.sequelize.sync({alert: true});
+    await db.sequelize.sync({force: true});
     console.log('Database connection has been established successfully.');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
@@ -34,7 +34,7 @@ await DbConnection()
 
 setInterval(async () => {
   const product_id = productIds[Math.floor(Math.random() * productIds.length)];
-  const quantity = Math.floor(Math.random() * 3) + 1;
+  const quantity = Math.floor(Math.random() * 500) + 1;
 
   try {
     const { data } = await axios.post(API_URL, { product_id, quantity });
